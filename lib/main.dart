@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hello_world/bloc_observer.dart';
 import 'package:hello_world/cubit/ram_cubit.dart';
+import 'package:hello_world/cubit/ram_event.dart';
 import 'package:hello_world/service/ApiService.dart';
 
 import 'cubit/ram_state.dart';
@@ -56,7 +57,7 @@ class Dashboard extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             final cubit = BlocProvider.of<RamCubit>(context);
-            cubit.fetchNewRandomCharacter();
+            cubit.add(RamEvent.newRandomCharacterRequested());
           },
           child: const Icon(Icons.search),
         ),
@@ -76,7 +77,13 @@ class PageContent extends StatelessWidget {
               return const CircularProgressIndicator();
             }
             if(state is Success) {
-              return Image.network(state.character.image);
+              return Column(
+                children: [
+                  Image.network(state.character.image),
+                  Text(state.character.name),
+                  Text(state.character.gender)
+                ],
+              );
             }
             if(state is Error) {
               return const Text("Boom!");

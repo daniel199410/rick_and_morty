@@ -8,4 +8,10 @@ class AppBlocObserver extends BlocObserver {
     super.onChange(bloc, change);
     if(bloc is Cubit) debugPrint(change.toString());
   }
+
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    debugPrint(transition.toString());
+  }
 }
