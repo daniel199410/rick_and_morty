@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:hello_world/model/failure.dart';
@@ -15,7 +17,7 @@ class ApiService {
       if(body == null) {
         return const Left(Failure());
       }
-      final character = RamCharacter.fromJson(body);
+      final character = RamCharacter.fromJson(jsonDecode(body));
       return Right(character);
     } catch(e) {
       return const Left(Failure());

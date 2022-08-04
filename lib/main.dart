@@ -5,6 +5,8 @@ import 'package:hello_world/bloc_observer.dart';
 import 'package:hello_world/cubit/ram_cubit.dart';
 import 'package:hello_world/service/ApiService.dart';
 
+import 'cubit/ram_state.dart';
+
 void main() {
   BlocOverrides.runZoned(
     () => runApp(const RamApp())  ,
@@ -43,7 +45,23 @@ class Dashboard extends StatelessWidget {
         title: Text(title),
         ),
         body: Center(
-         child: Text(title)
+         child: BlocBuilder<RamCubit, RamState>(
+           builder: (context, state) {
+             if(state is Loading) {
+               return const CircularProgressIndicator();
+             }
+             if(state is Success) {
+               return Image.network(state.character.image);
+             }
+             if(state is Error) {
+               return const Text("Boom!");
+             }
+             return Container(
+               color: Colors.red,
+               width: 100,
+               height: 100,
+             );
+           },)
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {

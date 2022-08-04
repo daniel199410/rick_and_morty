@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hello_world/cubit/ram_state.dart';
 import 'package:hello_world/model/ram_character.dart';
@@ -10,7 +12,8 @@ class RamCubit extends Cubit<RamState> {
 
   Future<void> fetchNewRandomCharacter() async {
     emit(Loading());
-    final responseBox = await _apiService.getRamCharacter(400);
+    var random = Random().nextInt(1100);
+    final responseBox = await _apiService.getRamCharacter(random);
     final character = responseBox.fold((l) => l, (r) => r);
     if(responseBox.isLeft()) {
       return emit(Error());
