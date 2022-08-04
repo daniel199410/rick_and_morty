@@ -44,24 +44,13 @@ class Dashboard extends StatelessWidget {
         appBar: AppBar(
         title: Text(title),
         ),
-        body: Center(
-         child: BlocBuilder<RamCubit, RamState>(
-           builder: (context, state) {
-             if(state is Loading) {
-               return const CircularProgressIndicator();
-             }
-             if(state is Success) {
-               return Image.network(state.character.image);
-             }
-             if(state is Error) {
-               return const Text("Boom!");
-             }
-             return Container(
-               color: Colors.red,
-               width: 100,
-               height: 100,
-             );
-           },)
+        body: BlocListener<RamCubit, RamState>(
+          listener: (BuildContext context, state) {
+            if(state is Error) {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Boom!")));
+            }
+          },
+          child: const PageContent(),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -74,3 +63,30 @@ class Dashboard extends StatelessWidget {
   }
 }
 
+class PageContent extends StatelessWidget {
+  const PageContent({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: BlocBuilder<RamCubit, RamState>(
+          builder: (context, state) {
+            if(state is Loading) {
+              return const CircularProgressIndicator();
+            }
+            if(state is Success) {
+              return Image.network(state.character.image);
+            }
+            if(state is Error) {
+              return const Text("Boom!");
+            }
+            return Container(
+              color: Colors.teal,
+              width: 100,
+              height: 100,
+            );
+          },
+        )
+    );
+  }
+}
