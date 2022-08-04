@@ -45,6 +45,7 @@ class Dashboard extends StatelessWidget {
         title: Text(title),
         ),
         body: BlocListener<RamCubit, RamState>(
+          listenWhen: (previous, current) => previous is! Error && current is Error,
           listener: (BuildContext context, state) {
             if(state is Error) {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Boom!")));
