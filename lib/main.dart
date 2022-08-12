@@ -45,6 +45,13 @@ class SearchForm extends StatefulWidget {
 
 class SearchFormState extends State<SearchForm> {
   final _formKey = GlobalKey<FormState>();
+  final formController = TextEditingController();
+
+  @override
+  void dispose() {
+    formController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +62,7 @@ class SearchFormState extends State<SearchForm> {
             Flexible(
                 flex: 10,
                 child: TextFormField(
+                  controller: formController,
                   validator: (value) {
                     if(value == null || value.isEmpty) {
                       return 'Please enter some text';
@@ -68,9 +76,8 @@ class SearchFormState extends State<SearchForm> {
               child: OutlinedButton(
                 onPressed: () {
                   if(_formKey.currentState!.validate()) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('data'))
-                    );
+                    final cubit = BlocProvider.of<RamCubit>(context);
+                    cubit.add(RamEvent.charactersByNameRequested(formController.text));
                   }
                 },
                 child: const Icon(Icons.search),
@@ -138,6 +145,15 @@ class PageContent extends StatelessWidget {
                   Image.network(state.character.image),
                   Text(state.character.name),
                   Text(state.character.gender)
+                ],
+              );
+            }
+            if(state is SuccessfulCharacterByName) {
+              return Column(
+                children: [
+                  Image.network(state.charactersFilterResponse.results[0].image),
+                  Text(state.charactersFilterResponse.results[0].name),
+                  Text(state.charactersFilterResponse.results[0].gender)
                 ],
               );
             }

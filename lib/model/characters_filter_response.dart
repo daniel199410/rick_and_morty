@@ -15,7 +15,7 @@ class CharactersFilterResponse extends Equatable{
   List<Object?> get props => [];
 
   factory CharactersFilterResponse.fromJson(dynamic json)  => CharactersFilterResponse(
-    results: List<RamCharacter>.from(json.decode[json['results']].map((model) => RamCharacter.fromJson(model))),
-    info: json['info'],
+    results: List<RamCharacter>.from(json['results'].map((model) => RamCharacter.fromJson(model))),
+    info: Info.fromJson(json['info']),
   );
 }

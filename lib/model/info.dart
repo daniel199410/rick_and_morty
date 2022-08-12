@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 class Info extends Equatable{
   final int count;
   final int pages;
-  final String next;
+  final String? next;
 
   const Info({
     required this.count,
