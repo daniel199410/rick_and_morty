@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hello_world/bloc_observer.dart';
 import 'package:hello_world/cubit/ram_cubit.dart';
 import 'package:hello_world/cubit/ram_event.dart';
+import 'package:hello_world/model/ram_character.dart';
 import 'package:hello_world/service/ApiService.dart';
 
 import 'cubit/ram_state.dart';
@@ -73,7 +74,7 @@ class SearchFormState extends State<SearchForm> {
             const Spacer(),
             Flexible(
               flex: 2,
-              child: OutlinedButton(
+              child: ElevatedButton(
                 onPressed: () {
                   if(_formKey.currentState!.validate()) {
                     final cubit = BlocProvider.of<RamCubit>(context);
@@ -101,19 +102,22 @@ class Dashboard extends StatelessWidget {
           title: Text(title),
         ),
         body: Container(
-          margin: const EdgeInsets.all(8),
+          margin: const EdgeInsets.symmetric(horizontal: 8),
           child: Column(
             children: [
               const SearchForm(),
-              BlocListener<RamCubit, RamState>(
+              Flexible(child: BlocListener<RamCubit, RamState>(
                 listenWhen: (previous, current) => previous is! Error && current is Error,
                 listener: (BuildContext context, state) {
                   if(state is Error) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Boom!")));
                   }
                 },
-                child: const PageContent(),
-              )
+                child: Container(
+                    margin: const EdgeInsets.only(top: 8),
+                    child: const PageContent()
+                ),
+              ))
             ],
           ),
         ),
@@ -122,7 +126,7 @@ class Dashboard extends StatelessWidget {
             final cubit = BlocProvider.of<RamCubit>(context);
             cubit.add(RamEvent.newRandomCharacterRequested());
           },
-          child: const Icon(Icons.search),
+          child: const Icon(Icons.shuffle),
         ),
     );
   }
@@ -133,36 +137,70 @@ class PageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: BlocBuilder<RamCubit, RamState>(
-          builder: (context, state) {
-            if(state is Loading) {
-              return const CircularProgressIndicator();
-            }
-            if(state is Success) {
-              return Column(
-                children: [
-                  Image.network(state.character.image),
-                  Text(state.character.name),
-                  Text(state.character.gender)
-                ],
-              );
-            }
-            if(state is SuccessfulCharacterByName) {
-              return Column(
-                children: [
-                  Image.network(state.charactersFilterResponse.results[0].image),
-                  Text(state.charactersFilterResponse.results[0].name),
-                  Text(state.charactersFilterResponse.results[0].gender)
-                ],
-              );
-            }
-            if(state is Error) {
-              return const Text("Boom!");
-            }
-            return Container();
-          },
-        )
+    return BlocBuilder<RamCubit, RamState>(
+      builder: (context, state) {
+        if(state is Loading) {
+          return const CircularProgressIndicator();
+        }
+        if(state is Success) {
+          return Column(
+            children: [
+              Image.network(state.character.image),
+              Text(state.character.name),
+              Text(state.character.gender)
+            ],
+          );
+        }
+        if(state is SuccessfulCharacterByName) {
+          var characters = state.charactersFilterResponse.results;
+          return ListView.builder(
+              itemCount: characters.length,
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: ((context, index) {
+                return CharacterInfo(character: characters[index]);
+              }
+            )
+          );
+        }
+        if(state is Error) {
+          return const Text("Boom!");
+        }
+        return Container();
+      },
     );
   }
+}
+
+class CharacterInfo extends StatelessWidget {
+  const CharacterInfo({Key? key, required this.character}) : super(key: key);
+
+  final RamCharacter character;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: (
+        Row(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(right: 8),
+              child: Image.network(character.image, height: 60, width: 60, )
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Name:${character.name}', softWrap: true,),
+                  Text('Gender: ${character.gender}'),
+                ],
+              ),
+            )
+          ],
+        )
+      ),
+    );
+  }
+
 }
