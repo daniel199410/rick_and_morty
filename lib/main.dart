@@ -34,6 +34,54 @@ class RamApp extends StatelessWidget {
   }
 }
 
+class SearchForm extends StatefulWidget {
+  const SearchForm({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return SearchFormState();
+  }
+}
+
+class SearchFormState extends State<SearchForm> {
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+        key: _formKey,
+        child: Row(
+          children: [
+            Flexible(
+                flex: 10,
+                child: TextFormField(
+                  validator: (value) {
+                    if(value == null || value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                )),
+            const Spacer(),
+            Flexible(
+              flex: 2,
+              child: OutlinedButton(
+                onPressed: () {
+                  if(_formKey.currentState!.validate()) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('data'))
+                    );
+                  }
+                },
+                child: const Icon(Icons.search),
+              ),
+            ),
+          ],
+        )
+    );
+  }
+}
+
 class Dashboard extends StatelessWidget {
   const Dashboard({Key? key, required this.title}) : super(key: key);
 
@@ -43,16 +91,24 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-        title: Text(title),
+          title: Text(title),
         ),
-        body: BlocListener<RamCubit, RamState>(
-          listenWhen: (previous, current) => previous is! Error && current is Error,
-          listener: (BuildContext context, state) {
-            if(state is Error) {
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Boom!")));
-            }
-          },
-          child: const PageContent(),
+        body: Container(
+          margin: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              const SearchForm(),
+              BlocListener<RamCubit, RamState>(
+                listenWhen: (previous, current) => previous is! Error && current is Error,
+                listener: (BuildContext context, state) {
+                  if(state is Error) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Boom!")));
+                  }
+                },
+                child: const PageContent(),
+              )
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
@@ -88,11 +144,7 @@ class PageContent extends StatelessWidget {
             if(state is Error) {
               return const Text("Boom!");
             }
-            return Container(
-              color: Colors.teal,
-              width: 100,
-              height: 100,
-            );
+            return Container();
           },
         )
     );

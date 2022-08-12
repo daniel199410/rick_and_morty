@@ -23,4 +23,17 @@ class ApiService {
       return const Left(Failure());
     }
   }
+
+  /*Future<Either<Failure, RamCharacter>> getRamCharactersByName(String name) async {
+    try {
+      final response = await _dio.get<String>('https://rickandmortyapi.com/api/character/?name=$name');
+      final body = response.data;
+      if(body == null) {
+        return const Left(Failure());
+      }
+      return Right(characters);
+    } catch(e) {
+      return const Left(Failure());
+    }
+  }*/
 }
