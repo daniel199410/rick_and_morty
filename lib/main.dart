@@ -164,7 +164,22 @@ class PageContent extends StatelessWidget {
           );
         }
         if(state is Error) {
-          return const Text("Boom!");
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold),
+                    "¡Oh no!"
+                  ),
+                ),
+                Text("No hemos encontrado información.")
+              ],
+            ),
+          );
         }
         return Container();
       },
