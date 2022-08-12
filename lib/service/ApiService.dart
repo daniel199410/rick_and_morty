@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:hello_world/model/characters_filter_response.dart';
-import 'package:hello_world/model/failure.dart';
-import 'package:hello_world/model/ram_character.dart';
+
+import '../model/characters_filter_response.dart';
+import '../model/failure.dart';
+import '../model/ram_character.dart';
 
 class ApiService {
   final Dio _dio;

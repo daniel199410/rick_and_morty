@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:hello_world/model/ram_character.dart';
+import 'package:ric_and_morty/model/ram_character.dart';
 
 class Result extends Equatable{
   final List<RamCharacter> results;

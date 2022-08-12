@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:hello_world/model/characters_filter_response.dart';
-import 'package:hello_world/model/ram_character.dart';
+
+import '../model/characters_filter_response.dart';
+import '../model/ram_character.dart';
 
 abstract class RamState extends Equatable {
   @override

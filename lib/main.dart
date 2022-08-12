@@ -1,20 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hello_world/bloc_observer.dart';
-import 'package:hello_world/cubit/ram_cubit.dart';
-import 'package:hello_world/cubit/ram_event.dart';
-import 'package:hello_world/model/ram_character.dart';
-import 'package:hello_world/service/ApiService.dart';
+import 'package:ric_and_morty/service/ApiService.dart';
 
+import 'bloc_observer.dart';
+import 'cubit/ram_cubit.dart';
+import 'cubit/ram_event.dart';
 import 'cubit/ram_state.dart';
+import 'model/ram_character.dart';
 
 void main() {
-  BlocOverrides.runZoned(
-    () => runApp(const RamApp())  ,
-    blocObserver: AppBlocObserver()
-  );
-
+  Bloc.observer = AppBlocObserver();
+  runApp(const RamApp());
 }
 
 class RamApp extends StatelessWidget {

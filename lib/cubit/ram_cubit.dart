@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hello_world/cubit/ram_event.dart';
-import 'package:hello_world/cubit/ram_state.dart';
-import 'package:hello_world/model/ram_character.dart';
-import 'package:hello_world/service/ApiService.dart';
+import 'package:ric_and_morty/cubit/ram_event.dart';
+import 'package:ric_and_morty/cubit/ram_state.dart';
 
 import '../model/characters_filter_response.dart';
+import '../model/ram_character.dart';
+import '../service/ApiService.dart';
 
 class RamCubit extends Bloc<RamEvent, RamState> {
   RamCubit({required ApiService apiService}) : _apiService = apiService, super(InititalState()) {

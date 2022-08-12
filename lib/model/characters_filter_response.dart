@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:hello_world/model/info.dart';
-import 'package:hello_world/model/ram_character.dart';
+import 'package:ric_and_morty/model/ram_character.dart';
+
+import 'info.dart';
 
 class CharactersFilterResponse extends Equatable{
   final Info info;
