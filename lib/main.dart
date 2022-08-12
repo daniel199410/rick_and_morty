@@ -57,35 +57,45 @@ class SearchFormState extends State<SearchForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-        key: _formKey,
+      key: _formKey,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 16),
         child: Row(
           children: [
             Flexible(
-                flex: 10,
-                child: TextFormField(
-                  controller: formController,
-                  validator: (value) {
-                    if(value == null || value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                )),
-            const Spacer(),
+              flex: 10,
+              child: TextFormField(
+                controller: formController,
+                decoration: InputDecoration(
+                  hintText: 'Enter character name.',
+                  suffixIcon: IconButton(
+                    onPressed: formController.clear,
+                    icon: const Icon(Icons.clear),
+                  )
+                ),
+                validator: (value) {
+                  if(value == null || value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+              )
+            ),
             Flexible(
               flex: 2,
-              child: ElevatedButton(
+              child: TextButton(
                 onPressed: () {
                   if(_formKey.currentState!.validate()) {
                     final cubit = BlocProvider.of<RamCubit>(context);
                     cubit.add(RamEvent.charactersByNameRequested(formController.text));
                   }
                 },
-                child: const Icon(Icons.search),
+                child: const Icon(Icons.search, color: Colors.blue),
               ),
             ),
           ],
-        )
+        ),
+      )
     );
   }
 }
@@ -114,8 +124,8 @@ class Dashboard extends StatelessWidget {
                   }
                 },
                 child: Container(
-                    margin: const EdgeInsets.only(top: 8),
-                    child: const PageContent()
+                  margin: const EdgeInsets.only(top: 8),
+                  child: const PageContent()
                 ),
               ))
             ],
@@ -143,24 +153,26 @@ class PageContent extends StatelessWidget {
           return const CircularProgressIndicator();
         }
         if(state is Success) {
-          return Column(
-            children: [
-              Image.network(state.character.image),
-              Text(state.character.name),
-              Text(state.character.gender)
-            ],
+          return SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Image.network(state.character.image),
+                Text(state.character.name),
+                Text(state.character.gender)
+              ],
+            ),
           );
         }
         if(state is SuccessfulCharacterByName) {
           var characters = state.charactersFilterResponse.results;
           return ListView.builder(
-              itemCount: characters.length,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: ((context, index) {
-                return CharacterInfo(character: characters[index]);
-              }
-            )
+            itemCount: characters.length,
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            itemBuilder: ((context, index) {
+              return CharacterInfo(character: characters[index]);
+            })
           );
         }
         if(state is Error) {
@@ -207,8 +219,8 @@ class CharacterInfo extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name:${character.name}', softWrap: true,),
-                  Text('Gender: ${character.gender}'),
+                  Text(character.name),
+                  Text(character.gender),
                 ],
               ),
             )
